@@ -140,10 +140,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI_Homework2.cpp" />
+    <ClCompile Include="ClientDistancePair.cpp" />
     <ClCompile Include="ClientProfile.cpp" />
     <ClCompile Include="DataClassifier.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientDistancePair.h" />
     <ClInclude Include="ClientProfile.h" />
     <ClInclude Include="DataClassifier.h" />
   </ItemGroup>

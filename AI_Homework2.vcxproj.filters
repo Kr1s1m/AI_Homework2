@@ -24,12 +24,18 @@
     <ClCompile Include="DataClassifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ClientDistancePair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientProfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataClassifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientDistancePair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

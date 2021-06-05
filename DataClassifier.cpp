@@ -38,8 +38,6 @@ void DataClassifier::loadDataFrom(const std::string& filename)
 
 }
 
-
-
 DataClassifier::DataClassifier(const std::string& filename, unsigned int _k)
 {
 	loadDataFrom(filename);
@@ -53,12 +51,88 @@ DataClassifier::DataClassifier(const std::string& filename, unsigned int _k)
 		k = _k;
 }
 
-void DataClassifier::printData()
+std::pair<double, double> DataClassifier::normalizeData(const ClientProfile& clip)
 {
-	
-	for (std::multiset<ClientProfile>::iterator it = clientData.begin(); it != clientData.end(); it++)
-		std::cout << *it;
+	double minExpend = clientData.begin()->getExpenditure();
+	double maxExpend = (--clientData.end())->getExpenditure();
 
+	double expend = (clip.getExpenditure() - minExpend) / (maxExpend - minExpend);
+
+	double freq = ((int)clip.getFrequency() - (int)Frequency::Rarely) / ((int)Frequency::VeryOften - (int)Frequency::Rarely);
+
+	return std::make_pair(expend, freq);
+}
+
+double DataClassifier::getDistanceBetween(const ClientProfile& left, const ClientProfile& right)
+{
+	std::pair<double, double> leftNorm = normalizeData(left);
+	std::pair<double, double> rightNorm = normalizeData(right);
+
+	double x1 = leftNorm.first;
+	double x2 = leftNorm.second;
+
+	double y1 = rightNorm.first;
+	double y2 = rightNorm.second;
+
+	double euqlid = sqrt(((x1 - y1) * (x1 - y1)) + ((x2 - y2) * (x2 - y2)));
+
+	return euqlid;
+}
+
+bool DataClassifier::getMajority(minHeap& distQ)
+{
+	unsigned int interested = 0;
+	unsigned int notIntersted = 0;
+	unsigned int examined = 0;
+
+
+	ClientDistancePair current = distQ.top();
+	distQ.pop();
+
+	examined++;
+
+	bool closest = current.first()->caresAboutSpecialOffers();
+	
+
+	while (examined < k)
+	{
+		current = distQ.top();
+		distQ.pop();
+
+		examined++;
+
+
+		if (current.first()->caresAboutSpecialOffers())
+			interested++;
+		else
+			notIntersted++;
+
+		if (interested > k / 2) return true;
+
+		if (notIntersted > k / 2) return false;
+		
+	}
+
+	if (interested == notIntersted)
+	{
+		return closest;
+	}
+
+	return interested > notIntersted;
+
+}
+
+
+ClientProfile DataClassifier::classify(int testExpend, Frequency testFreq)
+{
+	minHeap distanceQueue;
+
+	ClientProfile test(testExpend, testFreq, false);
+
+	for (std::multiset<ClientProfile>::iterator it = clientData.begin(); it != clientData.end(); ++it)
+		distanceQueue.push(ClientDistancePair( it, getDistanceBetween(*it, test) ));
+
+	return ClientProfile(testExpend, testFreq, getMajority(distanceQueue)); 
 }
 
 void DataClassifier::addClientProfile(ClientProfile clip)
@@ -67,56 +141,23 @@ void DataClassifier::addClientProfile(ClientProfile clip)
 
 	std::ofstream oFile;
 	oFile.open(databaseFilename, std::ios::out | std::ios::app);
-	
+
 	if (!oFile)
 	{
 		std::cerr << "Database file " << databaseFilename << " error!\n";
 		return;
 	}
-	
+
 	oFile << clip;
 
 	oFile.close();
 
 }
 
-ClientProfile DataClassifier::classify(int testExpend, Frequency testFreq)
+void DataClassifier::printData()
 {
-	unsigned int nearestByExpendCount = 0;
 
-	bool testInterest = false;
+	for (std::multiset<ClientProfile>::iterator it = clientData.begin(); it != clientData.end(); it++)
+		std::cout << *it;
 
-	std::vector<std::multiset<ClientProfile>::iterator> kNearestByExpend;
-
-	std::multiset<ClientProfile>::iterator i = clientData.lower_bound(testExpend);
-	std::multiset<ClientProfile>::iterator j = i;
-
-	kNearestByExpend.push_back(j);
-	nearestByExpendCount++;
-
-	i++;
-	j--;
-
-	while (nearestByExpendCount < k)
-	{
-		
-		if (abs(i->getExpenditure() - testExpend) < abs(j->getExpenditure() - testExpend))
-		{
-			kNearestByExpend.push_back(i);
-			i++;
-
-		}
-		else
-		{
-			kNearestByExpend.push_back(j);
-			j--;
-
-		}
-
-		nearestByExpendCount++;
-	}
-
-	
-
-	return ClientProfile(testExpend, testFreq, testInterest);
 }

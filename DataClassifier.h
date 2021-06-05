@@ -4,9 +4,13 @@
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <queue>
+
 
 #include "ClientProfile.h"
+#include "ClientDistancePair.h"
 
+typedef std::priority_queue<ClientDistancePair, std::vector<ClientDistancePair>, std::greater<ClientDistancePair>> minHeap;
 
 class DataClassifier
 {
@@ -19,6 +23,12 @@ private:
 	std::string databaseFilename;
 
 	void loadDataFrom(const std::string&);
+
+	std::pair<double, double> normalizeData(const ClientProfile&);
+
+	double getDistanceBetween(const ClientProfile&, const ClientProfile&);
+
+	bool getMajority(minHeap&);
 
 public:
 	

@@ -11,7 +11,7 @@ int main()
 
     std::cout << "\n\n\n\n";
 
-    dclassifier.classify(1000, Frequency::Sometimes);
+    std::cout << dclassifier.classify(1000, Frequency::Often);
 
 
     return 0;
