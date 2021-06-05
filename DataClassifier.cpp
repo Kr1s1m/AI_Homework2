@@ -93,6 +93,8 @@ bool DataClassifier::getMajority(minHeap& distQ)
 
 	bool closest = current.first()->caresAboutSpecialOffers();
 	
+	std::cout << *current.first() << "       " <<current.second();
+	
 
 	while (examined < k)
 	{
@@ -101,17 +103,21 @@ bool DataClassifier::getMajority(minHeap& distQ)
 
 		examined++;
 
+		std::cout << *current.first() << "       " << current.second();
+
 
 		if (current.first()->caresAboutSpecialOffers())
 			interested++;
 		else
 			notIntersted++;
 
-		if (interested > k / 2) return true;
+		//if (interested > k / 2) return true;
 
-		if (notIntersted > k / 2) return false;
+		//if (notIntersted > k / 2) return false;
 		
 	}
+
+	std::cout << "\n\n\n";
 
 	if (interested == notIntersted)
 	{
