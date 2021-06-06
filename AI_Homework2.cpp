@@ -8,7 +8,6 @@ int main()
 
     DataClassifier dclassifier("Training dataset HW2_AI 2021.csv", k);
 
-
     std::cout << dclassifier.classify(1000, Frequency::Sometimes) << "\n";
 
 
