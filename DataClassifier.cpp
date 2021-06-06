@@ -51,6 +51,11 @@ DataClassifier::DataClassifier(const std::string& filename, unsigned int _k)
 		k = _k;
 }
 
+void DataClassifier::setK(unsigned int _k)
+{
+	k = _k;
+}
+
 std::pair<double, double> DataClassifier::normalizeData(const ClientProfile& clip)
 {
 	double minExpend = clientData.begin()->getExpenditure();
@@ -58,7 +63,7 @@ std::pair<double, double> DataClassifier::normalizeData(const ClientProfile& cli
 
 	double expend = ((double)clip.getExpenditure() - minExpend) / ((double)maxExpend - minExpend);
 
-	double freq = ((double)clip.getFrequency() - (int)Frequency::Rarely) / ((double)Frequency::VeryOften - (int)Frequency::Rarely);
+	double freq = ((double)clip.getFrequency() - (double)Frequency::Rarely) / ((double)Frequency::VeryOften - (double)Frequency::Rarely);
 
 	return std::make_pair(expend, freq);
 }
@@ -93,9 +98,13 @@ bool DataClassifier::getMajority(minHeap& distQ)
 
 	bool closest = current.first()->caresAboutSpecialOffers();
 	
-	std::cout << k << " nearest neighbours by distance to test example:\n";
-	std::cout << *current.first() << "       " <<current.second();
+	if (closest)
+		interested++;
+	else
+		notIntersted++;
 	
+	//std::cout << k << " nearest neighbours by distance to test example:\n";
+	//std::cout << *current.first() << "       " << current.second();
 
 	while (examined < k)
 	{
@@ -104,7 +113,7 @@ bool DataClassifier::getMajority(minHeap& distQ)
 
 		examined++;
 
-		std::cout << *current.first() << "       " << current.second();
+		//std::cout << *current.first() << "       " << current.second();
 
 
 		if (current.first()->caresAboutSpecialOffers())
@@ -112,13 +121,13 @@ bool DataClassifier::getMajority(minHeap& distQ)
 		else
 			notIntersted++;
 
-		//if (interested > k / 2) return true;
+		if (interested > k / 2) return true;
 
-		//if (notIntersted > k / 2) return false;
+	    if (notIntersted > k / 2) return false;
 		
 	}
 
-	std::cout << "\n\n\n";
+	//std::cout << "\n\n\n";
 
 	if (interested == notIntersted)
 	{

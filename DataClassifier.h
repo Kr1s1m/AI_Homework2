@@ -34,6 +34,8 @@ public:
 	
 	DataClassifier(const std::string&, unsigned int = 1);
 
+	void setK(unsigned int);
+
 	void printData();
 	void addClientProfile(ClientProfile);
 	

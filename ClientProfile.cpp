@@ -1,5 +1,7 @@
 #include "ClientProfile.h"
 
+
+
 Frequency ClientProfile::getFrequency(const std::string& freqDescription)
 {
 	switch (freqDescription[0])
@@ -75,32 +77,50 @@ bool operator<(const ClientProfile& left, const ClientProfile& right)
 	return left.expenditure < right.expenditure;
 }
 
-std::ostream& operator<<(std::ostream& os, const ClientProfile& clip)
+
+Frequency& operator++(Frequency& freq)
 {
-	std::string freqDescr;
-
-	switch (clip.frequency)
+	switch (freq)
 	{
-		case Frequency::Rarely :
-			freqDescr = "Rarely";
+
+	case Frequency::Never:  return freq = Frequency::Rarely;
+	case Frequency::Rarely:  return freq = Frequency::Sometimes;
+	case Frequency::Sometimes:  return freq = Frequency::Often;
+	case Frequency::Often:  return freq = Frequency::VeryOften;
+	case Frequency::VeryOften:  return freq = Frequency::Never;
+
+	}
+}
+
+std::ostream& operator<<(std::ostream& os, const Frequency& freq)
+{
+	switch (freq)
+	{
+	case Frequency::Rarely:
+		os << "Rarely";
 		break;
 
-		case Frequency::Sometimes :
-			freqDescr = "Sometimes";
+	case Frequency::Sometimes:
+		os << "Sometimes";
 		break;
 
-		case Frequency::Often :
-			freqDescr = "Often";
+	case Frequency::Often:
+		os << "Often";
 		break;
 
-		case Frequency::VeryOften :
-			freqDescr = "Very often";
+	case Frequency::VeryOften:
+		os << "Very often";
 		break;
 
-		default:
-			freqDescr = "Never";
+	default:
+		os << "Never";
 		break;
 	}
 
-	return os << "\n" << clip.expenditure << ";" << freqDescr << ";" << clip.discount;
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const ClientProfile& clip)
+{
+	return os << "\n" << clip.expenditure << ";" << clip.frequency << ";" << clip.discount;
 }

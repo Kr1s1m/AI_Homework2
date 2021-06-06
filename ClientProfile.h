@@ -11,7 +11,12 @@ enum class Frequency
     Sometimes,
     Often,
     VeryOften,
+
+    
 };
+
+std::ostream& operator<<(std::ostream&, const Frequency&);
+Frequency& operator++(Frequency&);
 
 
 class ClientProfile

@@ -5,13 +5,35 @@
 int main()
 {
 
-    // Prefer the use of odd numbers for k to avoid ties, since there are only two possible classes.
-    // If there is a tie, the class of the closest example will be chosen.
-    int k = 7;
+    std::ofstream outputFile("results.txt", std::ios::out);
 
-    DataClassifier dclassifier("Training dataset HW2_AI 2021.csv", k);
 
-    std::cout <<  dclassifier.classify(1000, Frequency::Sometimes) << "  <------- Test example classified!"<< "\n";
+    DataClassifier dclassifier("Training dataset HW2_AI 2021.csv");
+
+
+
+
+    for (unsigned int expenditure = 500; expenditure < 1910; expenditure += 10)
+    {
+        for (Frequency frequency = Frequency::Rarely; frequency != Frequency::Never; ++frequency)
+        {
+            outputFile << "expenditure: " << expenditure << ",  freqency: " << frequency << "\n";
+
+            for (unsigned int k = 1; k < 41; k += 1)
+            {
+                dclassifier.setK(k);
+                outputFile << dclassifier.classify(expenditure, frequency).caresAboutSpecialOffers() << "     k = " << k << "\n";
+            }
+
+            outputFile << "\n\n\n";
+        }
+    }
+
+    
+    
+
+    
+    
 
 
     return 0;
