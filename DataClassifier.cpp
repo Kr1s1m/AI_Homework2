@@ -93,6 +93,7 @@ bool DataClassifier::getMajority(minHeap& distQ)
 
 	bool closest = current.first()->caresAboutSpecialOffers();
 	
+	std::cout << k << " nearest neighbours by distance to test example:\n";
 	std::cout << *current.first() << "       " <<current.second();
 	
 
