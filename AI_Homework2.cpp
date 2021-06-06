@@ -10,19 +10,25 @@ int main()
 
     DataClassifier dclassifier("Training dataset HW2_AI 2021.csv");
 
+    
+    unsigned int expenditureLow = 500;
+    unsigned int expenditureHigh = 1900;
+
+    unsigned int expenditureJump = 25;
 
 
-
-    for (unsigned int expenditure = 500; expenditure < 1910; expenditure += 10)
+    for (unsigned int expenditure = expenditureLow; expenditure < expenditureHigh + expenditureJump; expenditure += expenditureJump)
     {
         for (Frequency frequency = Frequency::Rarely; frequency != Frequency::Never; ++frequency)
         {
-            outputFile << "expenditure: " << expenditure << ",  freqency: " << frequency << "\n";
+            outputFile << "expenditure: " << expenditure << ",  frequency: " << frequency << "\n";
 
             for (unsigned int k = 1; k < 41; k += 1)
             {
                 dclassifier.setK(k);
-                outputFile << dclassifier.classify(expenditure, frequency).caresAboutSpecialOffers() << "     k = " << k << "\n";
+
+                ClientProfile classified = dclassifier.classify(expenditure, frequency);
+                outputFile << classified.caresAboutSpecialOffers() << "     k = " << k << "\n";
             }
 
             outputFile << "\n\n\n";

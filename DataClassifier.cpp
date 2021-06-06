@@ -90,36 +90,19 @@ bool DataClassifier::getMajority(minHeap& distQ)
 	unsigned int notIntersted = 0;
 	unsigned int examined = 0;
 
+	bool closest = distQ.top().first()->caresAboutSpecialOffers();
 
-	ClientDistancePair current = distQ.top();
-	distQ.pop();
 
-	examined++;
-
-	bool closest = current.first()->caresAboutSpecialOffers();
-	
-	if (closest)
-		interested++;
-	else
-		notIntersted++;
-	
-	//std::cout << k << " nearest neighbours by distance to test example:\n";
-	//std::cout << *current.first() << "       " << current.second();
-
-	while (examined < k)
+	while (examined < k && !distQ.empty())
 	{
-		current = distQ.top();
-		distQ.pop();
 
-		examined++;
-
-		//std::cout << *current.first() << "       " << current.second();
-
-
-		if (current.first()->caresAboutSpecialOffers())
+		if (distQ.top().first()->caresAboutSpecialOffers())
 			interested++;
 		else
 			notIntersted++;
+
+		distQ.pop();
+		examined++;
 
 		if (interested > k / 2) return true;
 
@@ -127,15 +110,7 @@ bool DataClassifier::getMajority(minHeap& distQ)
 		
 	}
 
-	//std::cout << "\n\n\n";
-
-	if (interested == notIntersted)
-	{
-		return closest;
-	}
-
-	return interested > notIntersted;
-
+	return (interested == notIntersted) ? closest : (interested > notIntersted);
 }
 
 
