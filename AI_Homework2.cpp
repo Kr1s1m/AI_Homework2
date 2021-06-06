@@ -4,12 +4,10 @@
 
 int main()
 {
-    DataClassifier dclassifier("test.csv", 7);
+    int k = 7;
 
+    DataClassifier dclassifier("Training dataset HW2_AI 2021.csv", k);
 
-    dclassifier.printData();
-
-    std::cout << "\n\n\n\n";
 
     std::cout << dclassifier.classify(1000, Frequency::Sometimes) << "\n";
 

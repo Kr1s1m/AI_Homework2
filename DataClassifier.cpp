@@ -56,9 +56,9 @@ std::pair<double, double> DataClassifier::normalizeData(const ClientProfile& cli
 	double minExpend = clientData.begin()->getExpenditure();
 	double maxExpend = (--clientData.end())->getExpenditure();
 
-	double expend = (clip.getExpenditure() - minExpend) / (maxExpend - minExpend);
+	double expend = ((double)clip.getExpenditure() - minExpend) / ((double)maxExpend - minExpend);
 
-	double freq = ((int)clip.getFrequency() - (int)Frequency::Rarely) / ((int)Frequency::VeryOften - (int)Frequency::Rarely);
+	double freq = ((double)clip.getFrequency() - (int)Frequency::Rarely) / ((double)Frequency::VeryOften - (int)Frequency::Rarely);
 
 	return std::make_pair(expend, freq);
 }
